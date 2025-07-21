@@ -30,6 +30,17 @@ python src/inventario.py --drive /caminho/do/drive --hash
 Os arquivos CSV serão criados em `saida_inventarios/`. Cada execução gera um log
 em `logs/`.
 
+Cada inventário contém as colunas:
+
+- `caminho` – caminho relativo ao drive
+- `tamanho` – tamanho em bytes
+- `data_modificacao` – última modificação
+- `data_criacao` – data de criação do arquivo
+- `extensao` – extensão em minúsculas (``.jpg``, ``.txt``...)
+- `drive` – origem do inventário
+- `dir_pai` – primeiro diretório logo abaixo do drive
+- `hash_md5` – apenas se a flag `--hash` for utilizada
+
 ### Exemplos por sistema operacional
 
 Windows:

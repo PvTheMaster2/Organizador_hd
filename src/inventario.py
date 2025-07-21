@@ -69,31 +69,42 @@ def gerar_inventario(caminho_drive: Path, calcular_hashes: bool = False) -> None
 
     with csv_path.open("w", newline="", encoding="utf-8") as csvfile:
         writer = csv.writer(csvfile)
-        cabecalho = ["caminho", "tamanho", "data_modificacao"]
+        cabecalho = [
+            "caminho",
+            "tamanho",
+            "data_modificacao",
+            "data_criacao",
+            "extensao",
+            "drive",
+            "dir_pai",
+        ]
         if calcular_hashes:
             cabecalho.append("hash_md5")
         writer.writerow(cabecalho)
 
+        def montar_linha(arquivo: Path, md5: str | None = None) -> list[str]:
+            stat = arquivo.stat()
+            rel = arquivo.relative_to(caminho_drive)
+            linha = [
+                str(rel),
+                stat.st_size,
+                datetime.fromtimestamp(stat.st_mtime).isoformat(),
+                datetime.fromtimestamp(stat.st_ctime).isoformat(),
+                arquivo.suffix.lower(),
+                str(caminho_drive),
+                rel.parts[0] if rel.parts else "",
+            ]
+            if md5 is not None:
+                linha.append(md5)
+            return linha
+
         if calcular_hashes:
             with ProcessPoolExecutor(max_workers=1) as executor:
                 for arquivo, md5 in zip(arquivos, executor.map(calcular_hash, arquivos)):
-                    stat = arquivo.stat()
-                    linha = [
-                        str(arquivo.relative_to(caminho_drive)),
-                        stat.st_size,
-                        datetime.fromtimestamp(stat.st_mtime).isoformat(),
-                        md5,
-                    ]
-                    writer.writerow(linha)
+                    writer.writerow(montar_linha(arquivo, md5))
         else:
             for arquivo in arquivos:
-                stat = arquivo.stat()
-                linha = [
-                    str(arquivo.relative_to(caminho_drive)),
-                    stat.st_size,
-                    datetime.fromtimestamp(stat.st_mtime).isoformat(),
-                ]
-                writer.writerow(linha)
+                writer.writerow(montar_linha(arquivo))
 
     logger.info("Invent\u00e1rio salvo em %s", csv_path)
 

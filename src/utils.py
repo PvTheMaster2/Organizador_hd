@@ -1,7 +1,11 @@
 from pathlib import Path
 from typing import Iterator
 import hashlib
-from tqdm import tqdm
+try:
+    from tqdm import tqdm
+except ModuleNotFoundError:  # pragma: no cover - fallback when tqdm não instalado
+    def tqdm(iterable, **kwargs):
+        return iterable
 
 
 def listar_arquivos(diretorio: Path) -> Iterator[Path]:

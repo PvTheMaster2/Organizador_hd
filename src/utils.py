@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Iterator
 import hashlib
+from tqdm import tqdm
 
 
 def listar_arquivos(diretorio: Path) -> Iterator[Path]:
@@ -16,7 +17,7 @@ def listar_arquivos(diretorio: Path) -> Iterator[Path]:
     Iterator[Path]
         Caminhos de arquivos encontrados.
     """
-    for caminho in diretorio.rglob("*"):
+    for caminho in tqdm(diretorio.rglob("*"), desc="Listando", unit="arq"):
         if caminho.is_file():
             yield caminho
 

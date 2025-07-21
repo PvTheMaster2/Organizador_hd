@@ -28,7 +28,21 @@ python src/inventario.py --drive /caminho/do/drive --hash
 ```
 
 Os arquivos CSV serão criados em `saida_inventarios/`. Cada execução gera um log
-(hoje vazio) em `logs/`.
+em `logs/`.
+
+### Exemplos por sistema operacional
+
+Windows:
+
+```cmd
+python src\inventario.py --drive D:\ --hash
+```
+
+macOS/Linux:
+
+```bash
+python src/inventario.py --drive /mnt/MEU_HD --hash
+```
 
 ## Estrutura
 
